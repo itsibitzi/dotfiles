@@ -6,6 +6,8 @@ set nu
 set guifont=Liberation\ Mono\ for\ Powerline
 "set guifont=Menlo\ for\ Powerline
 
+set noswapfile
+
 " Hide the scroll bars in gvim
 set guioptions-=m
 set guioptions-=T
