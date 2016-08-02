@@ -1,4 +1,3 @@
-
 " Show line numbers.
 set nu
 
@@ -99,6 +98,61 @@ inoremap ;; <End>;
 set encoding=utf-8
 scriptencoding utf-8
 
+" Plugin loading requirements
+set nocompatible
+filetype off
+
+set rtp+=~/.vim/bundle/Vundle.vim/
+call vundle#begin()
+
+Plugin 'VundleVim/Vundle.vim'
+
+" Nerd tree config
+Plugin 'scrooloose/nerdtree'
+Plugin 'jistr/vim-nerdtree-tabs'
+let g:nerdtree_tabs_open_on_console_startup = 1
+let g:nerdtree_tabs_opne_on_on_gui_startup = 1
+
+" Pretty status bar
+Plugin 'itchyny/lightline.vim'
+let g:lightline = {
+            \ 'colorscheme': 'wombat',
+            \ 'component': {
+            \   'readonly': '%{&readonly?"⭤":""}',
+            \ },
+            \ 'separator': { 'left': '⮀', 'right': '⮂' },
+            \ 'subseparator': { 'left': '⮁', 'right': '⮃' }
+            \ }
+
+" Color schemes
+Plugin 'flazz/vim-colorschemes'
+
+" Rust syntax highlighting
+Plugin 'wting/rust.vim'
+
+" It's important this is "GUIEnter" as opposed to "VimEnter" - if it's at
+" VimEnter it clobbers LightLine's status bar coloring.
+autocmd GUIEnter * colorscheme molokai
+
+Plugin 'Valloric/YouCompleteMe'
+let g:ycm_rust_src_path = '/home/sam/.rustsrc/src'
+
+" Rust compilation
+map <F5> <esc>:!cargo build<CR>
+map <S-F5> <esc>:!cargo build --release<CR>
+
+call vundle#end()
+filetype plugin indent on
+
+function! MakeDirectory()
+    let dir_name = input('Create new directory: ')
+    if dir_name != ''
+        exec ':!mkdir ' . dir_name
+        redraw!
+    endif
+endfunction
+map <Leader>d :call MakeDirectory()<cr>
+
 function! RenameFile()
     let old_name = expand('%')
     let new_name = input('New file name: ', expand('%'), 'file')
@@ -109,64 +163,3 @@ function! RenameFile()
     endif
 endfunction
 map <Leader>n :call RenameFile()<cr>
-
-" Bundle loading requirements
-filetype off
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
-filetype plugin indent on
-Bundle 'gmarik/vundle'
-
-" Nerd tree config
-Bundle "scrooloose/nerdtree"
-Bundle 'jistr/vim-nerdtree-tabs'
-let g:nerdtree_tabs_open_on_console_startup = 1
-let g:nerdtree_tabs_opne_on_on_gui_startup = 1
-
-" Pretty status bar
-Bundle 'itchyny/lightline.vim'
-let g:lightline = {
-            \ 'colorscheme': 'wombat',
-            \ 'component': {
-            \   'readonly': '%{&readonly?"⭤":""}',
-            \ },
-            \ 'separator': { 'left': '⮀', 'right': '⮂' },
-            \ 'subseparator': { 'left': '⮁', 'right': '⮃' }
-            \ }
-
-" You Complete Me
-" Make me an IDE, lots of options
-" Bundle 'Valloric/YouCompleteMe'
-" let g:ycm_autoclose_preview_window_after_completion = 1
-" let g:ycm_confirm_extra_conf = 0
-" let g:ycm_show_diagnostics_ui = 1
-" nnoremap <F5> :YccmForceCompileAndDiagnostics<CR>
-
-" Color schemes
-Bundle 'flazz/vim-colorschemes'
-
-" Rust syntax highlighting
-Bundle "wting/rust.vim"
-
-Bundle 'digitaltoad/vim-jade'
-
-" It's important this is "GUIEnter" as opposed to "VimEnter" - if it's at
-" VimEnter it clobbers LightLine's status bar coloring.
-autocmd GUIEnter * colorscheme candycode
-
-" Rust compilation
-map <F5> <esc>:!cargo build<CR>
-map <S-F5> <esc>:!cargo build --release<CR>
-
-Bundle 'phildawes/racer'
-set hidden
-let g:racer_cmd = "/home/sam/.vim/bundle/racer/target/release/racer"
-
-function! MakeDirectory()
-    let dir_name = input('Create new directory: ')
-    if dir_name != ''
-        exec ':!mkdir ' . dir_name
-        redraw!
-    endif
-endfunction
-map <Leader>d :call MakeDirectory()<cr>
