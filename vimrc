@@ -1,20 +1,69 @@
-" Show line numbers.
+scriptencoding utf-8
+
+set nocompatible
+filetype off
+set rtp+=~/.vim/bundle/Vundle.vim
+
+call vundle#begin()
+    Plugin 'gmarik/vundle'
+
+    Plugin 'scrooloose/nerdtree'
+
+    Plugin 'jistr/vim-nerdtree-tabs'
+        let g:nerdtree_tabs_open_on_console_startup = 1
+        let g:nerdtree_tabs_open_on_gui_startup = 1
+        let g:nerdtree_tabs_smart_startup_focus = 2
+        let g:nerdtree_tabs_focus_on_files = 1
+        let g:nerdtree_tabs_autofind = 1
+
+    Plugin 'flazz/vim-colorschemes'
+        set t_Co=256
+        autocmd VimEnter * colorscheme molokai
+
+    Plugin 'wting/rust.vim'
+
+    Plugin 'derekwyatt/vim-scala'
+
+    Plugin 'mileszs/ack.vim'
+
+    Plugin 'ctrlpvim/ctrlp.vim'
+        let g:ctrlp_cmd = 'CtrlP'
+        let g:ctrlp_show_hidden = 1
+        let g:ctrlp_working_path_mode = 'ra'
+        let g:ctrlp_follow_symlinks = 1
+        let g:ctrlp_map = '<c-p>'
+        let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
+
+call vundle#end()
+
+filetype plugin indent on
+
+if has('persistent_undo')
+    set undodir=~/.vim/undodir
+    set undofile
+endif
+
+autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe 'normal! g`"' | endif
+
+augroup CursorLine
+    au!
+    au VimEnter,WinEnter,BufWinEnter * setlocal cursorline
+    au WinLeave * setlocal nocursorline
+augroup END
+
 set nu
-
-" Font
-set guifont=Liberation\ Mono\ for\ Powerline
-"set guifont=Menlo\ for\ Powerline
-
+set incsearch
+set hlsearch
 set noswapfile
+set ruler
+set laststatus=2
+set encoding=utf-8
 
-" Hide the scroll bars in gvim
+" Hide the scroll bars in {m,g}vim
 set guioptions-=m
 set guioptions-=T
 set guioptions-=r
 set guioptions-=L
-
-" Open tags in new tab
-nnoremap <C-Space> <C-w><C-]><C-w>T
 
 " Reload externally changed files
 set autoread
@@ -22,14 +71,13 @@ set autoread
 " Rust file type stuff
 filetype on
 au BufNewFile,BufRead *.rs set filetype=rust
-au BufNewFile,BufRead *.jade set filetype=jade
+au BufNewFile,BufRead *.scala set filetype=scala
+au BufNewFile,BufRead *.sc set filetype=scala
+au BufNewFile,BufRead *.sbt set filetype=scala
 
 " Remove trailing whitespace on save
 au BufWritePre * :%s/\s\+$//e
 au BufWritePre * :retab
-
-" Format indent
-nnoremap <C-f> mzgg=G`z
 
 " Display extra whitespace
 set list listchars=tab:»·,trail:·
@@ -61,11 +109,7 @@ nmap <C-j> <C-w><C-j>
 nmap <C-k> <C-w><C-k>
 nmap <C-l> <C-w><C-l>
 
-" Make it faster to save
-map <C-s> <esc>:w<CR>
-imap <C-s> <esc>:w<CR>
-
-" Move into braces etc.
+" Move into pairs and step over completed pairs
 inoremap ' ''<Left>
 inoremap <expr> ' strpart(getline('.'), col('.')-1, 1) == "'" ? "\<Right>" : "'"
 
@@ -84,8 +128,8 @@ inoremap [ []<Left>
 inoremap <expr> ] strpart(getline('.'), col('.')-1, 1) == "]" ? "\<Right>" : "]"
 
 inoremap { {}<Left>
-" Step over already closed braces
 inoremap <expr> } strpart(getline('.'), col('.')-1, 1) == "}" ? "\<Right>" : "}"
+
 " When return is pressed and we're inside a "{}" then push down the second
 " brace an extra newline.
 inoremap <expr> <CR> strpart(getline('.'), col('.')-1, 1) == "}" ? "\<CR>\<CR>\<Up>\<Tab>" : "\<CR>"
@@ -94,65 +138,7 @@ inoremap <expr> <CR> strpart(getline('.'), col('.')-1, 1) == "}" ? "\<CR>\<CR>\<
 inoremap ,, <End>,
 inoremap ;; <End>;
 
-" Encoding options.
-set encoding=utf-8
-scriptencoding utf-8
-
-" Plugin loading requirements
-set nocompatible
-filetype off
-
-set rtp+=~/.vim/bundle/Vundle.vim/
-call vundle#begin()
-
-Plugin 'VundleVim/Vundle.vim'
-
-" Nerd tree config
-Plugin 'scrooloose/nerdtree'
-Plugin 'jistr/vim-nerdtree-tabs'
-let g:nerdtree_tabs_open_on_console_startup = 1
-let g:nerdtree_tabs_opne_on_on_gui_startup = 1
-
-" Pretty status bar
-Plugin 'itchyny/lightline.vim'
-let g:lightline = {
-            \ 'colorscheme': 'wombat',
-            \ 'component': {
-            \   'readonly': '%{&readonly?"⭤":""}',
-            \ },
-            \ 'separator': { 'left': '⮀', 'right': '⮂' },
-            \ 'subseparator': { 'left': '⮁', 'right': '⮃' }
-            \ }
-
-" Color schemes
-Plugin 'flazz/vim-colorschemes'
-
-" Rust syntax highlighting
-Plugin 'wting/rust.vim'
-
-" It's important this is "GUIEnter" as opposed to "VimEnter" - if it's at
-" VimEnter it clobbers LightLine's status bar coloring.
-autocmd GUIEnter * colorscheme molokai
-
-Plugin 'Valloric/YouCompleteMe'
-let g:ycm_rust_src_path = '/home/sam/.rustsrc/src'
-
-" Rust compilation
-map <F5> <esc>:!cargo build<CR>
-map <S-F5> <esc>:!cargo build --release<CR>
-
-call vundle#end()
-filetype plugin indent on
-
-function! MakeDirectory()
-    let dir_name = input('Create new directory: ')
-    if dir_name != ''
-        exec ':!mkdir ' . dir_name
-        redraw!
-    endif
-endfunction
-map <Leader>d :call MakeDirectory()<cr>
-
+" Pretty flakey on OSX, has the habit of blowing away files entirely
 function! RenameFile()
     let old_name = expand('%')
     let new_name = input('New file name: ', expand('%'), 'file')
@@ -163,3 +149,12 @@ function! RenameFile()
     endif
 endfunction
 map <Leader>n :call RenameFile()<cr>
+
+function! MakeDirectory()
+    let dir_name = input('Create new directory: ')
+    if dir_name != ''
+        exec ':!mkdir ' . dir_name
+        redraw!
+    endif
+endfunction
+map <Leader>d :call MakeDirectory()<cr>
