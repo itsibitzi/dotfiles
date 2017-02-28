@@ -55,6 +55,7 @@ set nu
 set incsearch
 set hlsearch
 set noswapfile
+set nowrap
 set ruler
 set laststatus=2
 set encoding=utf-8
