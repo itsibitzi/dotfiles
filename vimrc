@@ -57,6 +57,7 @@ set hlsearch
 set noswapfile
 set nowrap
 set ruler
+set hidden
 set laststatus=2
 set encoding=utf-8
 
