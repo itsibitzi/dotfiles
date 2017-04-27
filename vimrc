@@ -8,13 +8,13 @@ call vundle#begin()
     Plugin 'gmarik/vundle'
 
     Plugin 'scrooloose/nerdtree'
+        autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
 
     Plugin 'jistr/vim-nerdtree-tabs'
         let g:nerdtree_tabs_open_on_console_startup = 1
         let g:nerdtree_tabs_open_on_gui_startup = 1
         let g:nerdtree_tabs_smart_startup_focus = 2
         let g:nerdtree_tabs_focus_on_files = 1
-        let g:nerdtree_tabs_autofind = 1
 
     Plugin 'flazz/vim-colorschemes'
         set t_Co=256
@@ -34,6 +34,9 @@ call vundle#begin()
         let g:ctrlp_map = '<c-p>'
         let g:ctrlp_user_command = ['.git', 'cd %s && git ls-files -co --exclude-standard']
 
+    Plugin 'Valloric/YouCompleteMe'
+        let g:ycm_rust_src_path = '/home/sam/.multirust/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src/'
+        nnoremap <leader>jd :YcmCompleter GoTo<CR>
 call vundle#end()
 
 filetype plugin indent on
@@ -57,9 +60,9 @@ set hlsearch
 set noswapfile
 set nowrap
 set ruler
-set hidden
 set laststatus=2
 set encoding=utf-8
+set hidden
 
 " Hide the scroll bars in {m,g}vim
 set guioptions-=m
