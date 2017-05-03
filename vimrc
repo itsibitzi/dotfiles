@@ -25,6 +25,7 @@ call vundle#begin()
     Plugin 'derekwyatt/vim-scala'
 
     Plugin 'mileszs/ack.vim'
+        let g:ackprg = 'rg --vimgrep'
 
     Plugin 'ctrlpvim/ctrlp.vim'
         let g:ctrlp_cmd = 'CtrlP'
