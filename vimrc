@@ -144,6 +144,10 @@ inoremap <expr> <CR> strpart(getline('.'), col('.')-1, 1) == "}" ? "\<CR>\<CR>\<
 inoremap ,, <End>,
 inoremap ;; <End>;
 
+" Keep text selected when indenting
+vnoremap < <gv
+vnoremap > >gv
+
 " Pretty flakey on OSX, has the habit of blowing away files entirely
 function! RenameFile()
     let old_name = expand('%')
