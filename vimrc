@@ -38,6 +38,12 @@ call vundle#begin()
     Plugin 'Valloric/YouCompleteMe'
         let g:ycm_rust_src_path = '/home/sam/.multirust/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/src/'
         nnoremap <leader>jd :YcmCompleter GoTo<CR>
+        
+    Plugin 'exu/pgsql.vim'
+        let g:sql_type_default = 'pgsql'
+
+    Plugin 'matze/vim-move'
+        let g:move_key_modifier = 'C'
 call vundle#end()
 
 filetype plugin indent on
@@ -101,6 +107,7 @@ nmap <S-j> gT
 nnoremap Q <nop>
 
 " Folding options
+set foldtext=getline(v:foldstart)
 set foldmethod=syntax
 set foldnestmax=10
 set nofoldenable
